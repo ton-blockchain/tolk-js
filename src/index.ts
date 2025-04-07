@@ -85,18 +85,20 @@ export async function runTolkCompiler(compilerConfig: TolkCompilerConfig): Promi
   const callbackPtr = mod.addFunction(function (kind: number, dataPtr: any, destContents: any, destError: any) {
     switch (kind) { // enum ReadCallback::Kind in C++
       case 0:       // realpath
-        const relativeFilename = copyFromCString(mod, dataPtr)
+        let relativeFilename = copyFromCString(mod, dataPtr)
+        if (relativeFilename.startsWith('@stdlib/') && !relativeFilename.endsWith('.tolk')) {
+          relativeFilename += '.tolk'     // import "@stdlib/gas-payments"
+        }
         allocatedPointers.push(copyToCStringPtr(mod, realpath(relativeFilename), destContents))
         break
       case 1:       // read file
         try {
           const filename = copyFromCString(mod, dataPtr) // already normalized (as returned above)
           if (filename.startsWith('@stdlib/')) {
-            const stdlibKey = filename.endsWith('.tolk') ? filename : filename + '.tolk'
-            if (!(stdlibKey in stdlibContents)) {
-              allocatedPointers.push(copyToCStringPtr(mod, stdlibKey + " not found", destError))
+            if (filename in stdlibContents) {
+              allocatedPointers.push(copyToCStringPtr(mod, stdlibContents[filename], destContents))
             } else {
-              allocatedPointers.push(copyToCStringPtr(mod, stdlibContents[stdlibKey], destContents))
+              allocatedPointers.push(copyToCStringPtr(mod, filename + " not found", destError))
             }
           } else {
             const contents = compilerConfig.fsReadCallback(filename)
