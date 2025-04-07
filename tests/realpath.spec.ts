@@ -8,6 +8,8 @@ describe('realpath', () => {
       '/var/tmp/stdlib.tolk',
       '.gitignore',
       '../stdlib.tolk',
+      '@stdlib/gas-payments',
+      '@stdlib/gas-payments.tolk',
     ]
     for (let p of should_be_unchanged) {
       expect(realpath(p)).toBe(p)

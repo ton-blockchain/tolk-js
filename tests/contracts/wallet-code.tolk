@@ -20,7 +20,7 @@ fun onExternalMessage(inMsg: slice) {
   cs.stackMoveToTop();
   while (cs.getRemainingRefsCount()) {
     var mode = cs.loadUint(8);
-    sendRawMessage(cs.loadRef(), mode);
+    sendRawMessage(cs.loadRef(), mode)
   }
   cs.assertEndOfSlice();
   setContractData(beginCell().storeUint(storedSeqno + 1, 32).storeUint(publicKey, 256).endCell());
@@ -29,7 +29,7 @@ fun onExternalMessage(inMsg: slice) {
 // Get methods
 
 get seqno(): int {
-  return getContractData().beginParse().preloadUint(32);
+  return getContractData().beginParse().preloadUint(32)
 }
 
 get get_public_key(): int {
