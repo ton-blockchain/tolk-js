@@ -17,6 +17,7 @@ export type TolkCompilerConfig = {
   fsReadCallback: FsReadCallback
   optimizationLevel?: number
   withStackComments?: boolean
+  withSrcLineComments?: boolean
   experimentalOptions?: string
 }
 
@@ -119,6 +120,7 @@ export async function runTolkCompiler(compilerConfig: TolkCompilerConfig): Promi
     entrypointFileName: compilerConfig.entrypointFileName,
     optimizationLevel: compilerConfig.optimizationLevel,
     withStackComments: compilerConfig.withStackComments,
+    withSrcLineComments: compilerConfig.withSrcLineComments,
     experimentalOptions: compilerConfig.experimentalOptions,
   })
 

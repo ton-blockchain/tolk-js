@@ -3,7 +3,7 @@ import fs from "fs";
 import {Cell} from "@ton/core";
 
 describe('tolk-js', () => {
-  const walletCodeCellHash = "8OtG02lbUYFZHJXjmAjKn0p69Ih9Y0V+4eS5KKH/Io0="
+  const walletCodeCellHash = "hA3nAz+xEJePYGrDyjJ+BXBcxSp9Y2xaAFLRgGntfDs="
 
   it('npm package version should match Tolk version', async () => {
     let tolkVersion = await getTolkCompilerVersion()
