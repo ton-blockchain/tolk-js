@@ -2,6 +2,11 @@
 import "@stdlib/gas-payments"
 import "@stdlib/tvm-lowlevel"
 
+struct Storage {
+  seqno: uint32;
+  publicKey: uint256;
+}
+
 fun onInternalMessage(inMsg: slice) {
   // do nothing for internal messages
 }
@@ -11,11 +16,9 @@ fun onExternalMessage(inMsg: slice) {
   var cs = inMsg;
   var (msgSeqno, validUntil) = (cs.loadUint(32), cs.loadUint(32));
   assert(!(validUntil <= blockchain.now())) throw 35;
-  var ds = contract.getData().beginParse();
-  var (storedSeqno, publicKey) = (ds.loadUint(32), ds.loadUint(256));
-  ds.assertEnd();
-  assert(msgSeqno == storedSeqno) throw 33;
-  assert(isSignatureValid(inMsg.hash(), signature, publicKey)) throw 34;
+  var st = Storage.fromCell(contract.getData());
+  assert(msgSeqno == st.seqno) throw 33;
+  assert(isSignatureValid(inMsg.hash(), signature, st.publicKey)) throw 34;
   acceptExternalMessage();
   cs.stackMoveToTop();
   while (cs.remainingRefsCount()) {
@@ -23,7 +26,8 @@ fun onExternalMessage(inMsg: slice) {
     sendRawMessage(cs.loadRef(), mode)
   }
   cs.assertEnd();
-  contract.setData(beginCell().storeUint(storedSeqno + 1, 32).storeUint(publicKey, 256).endCell());
+  st.seqno += 1;
+  contract.setData(st.toCell());
 }
 
 // Get methods
