@@ -4,3 +4,4 @@ node_modules
 dist
 src/tolkfiftlib.wasm.js
 src/stdlib.tolk.js
+/*.tgz
