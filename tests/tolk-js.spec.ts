@@ -80,11 +80,11 @@ describe('tolk-js', () => {
       fsReadCallback: path => fs.readFileSync(`./tests/contracts/${path}`, 'utf-8')
     }) as TolkResultSuccess
 
-    expect(result.sourcesSnapshot).toStrictEqual([
-      {
-        filename: 'wallet-code.tolk',
-        contents: fs.readFileSync(__dirname + '/contracts/wallet-code.tolk', 'utf-8'),
-      }
+    expect(result.sourcesSnapshot.map(s => s.filename)).toStrictEqual([
+        'wallet-code.tolk',
+        '../imports/wallet-helpers.tolk',
+        '../imports/wallet-storage.tolk',
+        '../imports/wallet-nothing.tolk',
     ]);
   })
 

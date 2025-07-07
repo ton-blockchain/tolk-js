@@ -86,9 +86,9 @@ export async function runTolkCompiler(compilerConfig: TolkCompilerConfig): Promi
   const callbackPtr = mod.addFunction(function (kind: number, dataPtr: any, destContents: any, destError: any) {
     switch (kind) { // enum ReadCallback::Kind in C++
       case 0:       // realpath
-        let relativeFilename = copyFromCString(mod, dataPtr)
-        if (relativeFilename.startsWith('@stdlib/') && !relativeFilename.endsWith('.tolk')) {
-          relativeFilename += '.tolk'     // import "@stdlib/gas-payments"
+        let relativeFilename = copyFromCString(mod, dataPtr)  // from `import` statement, relative to cur file
+        if (!relativeFilename.endsWith('.tolk')) {
+          relativeFilename += '.tolk'
         }
         allocatedPointers.push(copyToCStringPtr(mod, realpath(relativeFilename), destContents))
         break
