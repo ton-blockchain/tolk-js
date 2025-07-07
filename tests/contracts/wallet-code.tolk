@@ -1,11 +1,8 @@
 // Simple wallet smart contract
 import "@stdlib/gas-payments"
 import "@stdlib/tvm-lowlevel"
-
-struct Storage {
-  seqno: uint32;
-  publicKey: uint256;
-}
+import "../imports/wallet-helpers"
+import "../imports/./wallet-storage.tolk"
 
 fun onInternalMessage(inMsg: slice) {
   // do nothing for internal messages
@@ -32,11 +29,11 @@ fun onExternalMessage(inMsg: slice) {
 
 // Get methods
 
-get seqno(): int {
+get fun seqno(): int {
   return contract.getData().beginParse().preloadUint(32)
 }
 
-get get_public_key(): int {
+get fun get_public_key(): int {
   var cs = contract.getData().beginParse();
   cs.loadUint(32);
   return cs.preloadUint(256);

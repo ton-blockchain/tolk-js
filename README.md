@@ -1,8 +1,7 @@
 # WASM wrapper for TON Tolk Language
 
-**Tolk** is a new language for writing smart contracts in TON. Think of Tolk as the "next‑generation FunC".
-Tolk compiler is literally a fork of FunC compiler, introducing familiar syntax similar to TypeScript,
-but leaving all low-level optimizations untouched. 
+**Tolk** is a next-generation language for smart contracts in TON.
+It replaces FunC with modern syntax, strong types, and built-in serialization — while generating even more efficient assembler code.
 
 **tolk-js** is a WASM wrapper for Tolk compiler. 
 [Blueprint](https://github.com/ton-org/blueprint) uses tolk-js to compile `.tolk` files, 
@@ -81,13 +80,14 @@ The function `runTolkCompiler()` accepts the following properties (look up `Tolk
 * `entrypointFileName` — obvious
 * `fsReadCallback` — explained above
 * `optimizationLevel` (default 2) — controls Tolk compiler stack optimizer
-* `withStackComments` (default false) — Fift output will contain comments, if you wish to debug its output
+* `withStackComments` (default false) — Fift output will contain stack comments, if you wish to debug its output
+* `withSrcLineComments` (default false) — Fift output will contain line comments from original .tolk files
 * `experimentalOptions` (default '') — you can pass experimental compiler options here
 
 
 ## Embedded stdlib functions
 
-Tolk standard functions (`beginCell`, `assertEndOfSlice`, and lots of others) are available out of the box *(if you worked with FunC earlier, you had to download stdlib.fc and store in your project; in Tolk, you don't need any additional files)*.
+Tolk standard functions (`beginCell`, `assertEnd`, and lots of others) are available out of the box *(if you worked with FunC earlier, you had to download stdlib.fc and store in your project; in Tolk, you don't need any additional files)*.
 
 It works, because all stdlib files are embedded into JS, placed near wasm. If you `import "@stdlib/tvm-dicts"` for example, tolk-js will handle it, `fsReadCallback` won't be called.
 

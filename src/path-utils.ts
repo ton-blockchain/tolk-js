@@ -77,8 +77,8 @@ function posixNormalize(path: string, allowAboveRoot: boolean): string {
   return res
 }
 
-// 'realpath' in Tolk internals is used to resolve #include
-// (e.g., to detect that #include "a.tolk" and #include "dir/../a.tolk" reference the same file)
+// 'realpath' in Tolk internals is used to resolve imports
+// (e.g., to detect that `import "a.tolk"` and `import "dir/../a"` reference the same file)
 // here we do the same using manual normalization, taken from Node internals (to work in web)
 //
 // also, 'realpath' in C++ resolves symlinks
