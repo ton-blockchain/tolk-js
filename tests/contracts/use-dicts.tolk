@@ -8,4 +8,6 @@ fun prepareDict_3_30_4_40_5_x(valueAt5: int): dict {
     return dict;
 }
 
-fun main(){}
+fun main(){
+    prepareDict_3_30_4_40_5_x;
+}

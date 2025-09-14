@@ -1,6 +1,6 @@
 {
   "name": "@ton/tolk-js",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Tolk Language compiler (next-generation FunC)",
   "main": "dist/index.js",
   "bin": "./dist/cli.js",
