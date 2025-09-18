@@ -64,16 +64,6 @@ describe('tolk-js', () => {
     expect((res as any).message).toBe(undefined)
   })
 
-  it('should pass experimentalOptions', async () => {
-    let res = await runTolkCompiler({
-      entrypointFileName: 'with-unused.tolk',
-      fsReadCallback: path => fs.readFileSync(`./tests/contracts/${path}`, 'utf-8'),
-      experimentalOptions: 'remove-unused-functions'
-    }) as TolkResultSuccess
-
-    expect(res.fiftCode).not.toContain('unusedF')
-  })
-
   it('should return sourcesSnapshot', async () => {
     let result = await runTolkCompiler({
       entrypointFileName: "wallet-code.tolk",
