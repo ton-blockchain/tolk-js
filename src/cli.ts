@@ -13,6 +13,7 @@ async function tolkJsCli() {
     '--output-fift': String,
     '--experimental-options': String,
     '--cwd': String,
+    '--source-map': Boolean,
 
     '-v': '--version',
     '-h': '--help',
@@ -31,6 +32,7 @@ Options:
 --output-fif <filename> - output .fif file with Fift code output
 --experimental-options <names> - set experimental compiler options, comma-separated
 --cwd <path>, -C <path> — sets cwd to locate .tolk files (doesn't affect output paths)
+--source-map — collect a source map for debugging
 `)
     process.exit(0)
   }
@@ -57,6 +59,7 @@ Options:
     entrypointFileName: args._[0],
     experimentalOptions: args['--experimental-options'],
     fsReadCallback: p => fs.readFileSync(cwd ? path.join(cwd, p) : p, 'utf-8'),
+    collectSourceMap: args['--source-map'] === true,
   })
 
   if (result.status === 'error') {
@@ -71,6 +74,10 @@ Options:
       codeBoc64: result.codeBoc64,
       codeHashHex: result.codeHashHex,
       sourcesSnapshot: result.sourcesSnapshot,
+      fiftSourceMapCode: result.fiftSourceMapCode,
+      sourceMapCodeRecompiledBoc64: result.sourceMapCodeRecompiledBoc64,
+      sourceMapCodeBoc64: result.sourceMapCodeBoc64,
+      sourceMap: result.sourceMap,
     }, null, 2))
   }
 

@@ -1,6 +1,6 @@
 {
   "name": "@ton/tolk-js",
-  "version": "1.0.0",
+  "version": "1.0.68",
   "description": "Tolk Language compiler (next-generation FunC)",
   "main": "dist/index.js",
   "bin": "./dist/cli.js",
@@ -26,6 +26,7 @@
     "@ton/crypto": "^3.3.0",
     "@types/jest": "^29.5.12",
     "jest": "^29.7.0",
+    "ton-assembly": "/Users/petrmakhnev/tasm-new/ton-assembly-0.3.0.tgz",
     "ts-jest": "^29.2.4",
     "typescript": "^5.5.4"
   },
