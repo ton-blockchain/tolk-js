@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "arg": "^5.0.2",
-    "ton-source-map": "0.1.0",
+    "ton-source-map": "0.2.1",
     "ton-assembly": "0.3.1"
   },
   "prettier": {

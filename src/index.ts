@@ -175,7 +175,7 @@ export async function runTolkCompiler(compilerConfig: TolkCompilerConfig): Promi
     // and the debug section, thus getting a complete source code map that is accurately down
     // to the specific TVM instruction.
 
-    const sourceMapCodeCell = Cell.fromBoc(Buffer.from(result.sourceMapCodeBoc64 ?? result.codeBoc64, "base64"))[0]
+    const sourceMapCodeCell = Cell.fromBase64(result.sourceMapCodeBoc64 ?? result.codeBoc64)
     const [cleanCell, mapping] = recompileCell(sourceMapCodeCell);
     const assemblyMapping: AssemblyMapping = trace.createMappingInfo(mapping)
 
@@ -191,6 +191,7 @@ export async function runTolkCompiler(compilerConfig: TolkCompilerConfig): Promi
       sourceMap: {
         highlevelMapping: result.sourceMap ?? emptyHighlevelMapping,
         assemblyMapping,
+        recompiledCode: cleanCell.toBoc().toString('base64'),
       },
       sourcesSnapshot,
     }

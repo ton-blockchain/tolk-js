@@ -197,73 +197,94 @@ exports[`source-maps should generate source map 1`] = `
     "locations": [
       {
         "context": {
-          "ast_kind": "ast_function_declaration",
-          "func_inline_mode": 0,
-          "func_name": "MapLookupResult<slice>.loadValue",
-          "is_entry": true,
+          "containing_function": "MapLookupResult<slice>.loadValue",
+          "description": {
+            "ast_kind": "ast_function_declaration",
+          },
+          "event": "EnterFunction",
+          "inlining": {
+            "containing_func_inline_mode": 0,
+          },
         },
         "debug": undefined,
         "idx": 0,
         "loc": {
-          "col": 27,
+          "column": 26,
+          "end_column": 0,
+          "end_line": 0,
           "file": "@stdlib/common.tolk",
           "length": 1,
-          "line": 927,
-          "line_offset": 0,
+          "line": 926,
         },
-        "vars": [],
+        "variables": [],
       },
       {
         "context": {
-          "ast_kind": "ast_not_null_operator",
-          "func_inline_mode": 0,
-          "func_name": "MapLookupResult<slice>.loadValue",
+          "containing_function": "MapLookupResult<slice>.loadValue",
+          "description": {
+            "ast_kind": "ast_not_null_operator",
+          },
+          "inlining": {
+            "containing_func_inline_mode": 0,
+          },
         },
         "debug": undefined,
         "idx": 1,
         "loc": {
-          "col": 15,
+          "column": 14,
+          "end_column": 0,
+          "end_line": 0,
           "file": "@stdlib/common.tolk",
           "length": 1,
-          "line": 928,
-          "line_offset": 0,
+          "line": 927,
         },
-        "vars": [],
+        "variables": [],
       },
       {
         "context": {
-          "ast_kind": "ast_return_statement",
-          "func_inline_mode": 0,
-          "func_name": "MapLookupResult<slice>.loadValue",
+          "containing_function": "MapLookupResult<slice>.loadValue",
+          "description": {
+            "ast_kind": "ast_return_statement",
+          },
+          "event": "LeaveFunction",
+          "inlining": {
+            "containing_func_inline_mode": 0,
+          },
         },
         "debug": undefined,
         "idx": 2,
         "loc": {
-          "col": 4,
+          "column": 3,
+          "end_column": 0,
+          "end_line": 0,
           "file": "@stdlib/common.tolk",
           "length": 1,
-          "line": 928,
-          "line_offset": 1,
+          "line": 927,
         },
-        "vars": [],
+        "variables": [],
       },
       {
         "context": {
-          "ast_kind": "ast_function_declaration",
-          "func_inline_mode": 0,
-          "func_name": "main",
-          "is_entry": true,
+          "containing_function": "main",
+          "description": {
+            "ast_kind": "ast_function_declaration",
+          },
+          "event": "EnterFunction",
+          "inlining": {
+            "containing_func_inline_mode": 0,
+          },
         },
         "debug": undefined,
         "idx": 3,
         "loc": {
-          "col": 4,
+          "column": 3,
+          "end_column": 0,
+          "end_line": 0,
           "file": "wallet-code.tolk",
           "length": 1,
-          "line": 1,
-          "line_offset": 0,
+          "line": 0,
         },
-        "vars": [
+        "variables": [
           {
             "name": "a",
             "type": "int",
@@ -272,20 +293,25 @@ exports[`source-maps should generate source map 1`] = `
       },
       {
         "context": {
-          "ast_kind": "ast_int_const",
-          "func_inline_mode": 0,
-          "func_name": "main",
+          "containing_function": "main",
+          "description": {
+            "ast_kind": "ast_int_const",
+          },
+          "inlining": {
+            "containing_func_inline_mode": 0,
+          },
         },
         "debug": undefined,
         "idx": 4,
         "loc": {
-          "col": 18,
+          "column": 17,
+          "end_column": 0,
+          "end_line": 0,
           "file": "wallet-code.tolk",
           "length": 1,
-          "line": 2,
-          "line_offset": 0,
+          "line": 1,
         },
-        "vars": [
+        "variables": [
           {
             "name": "a",
             "type": "int",
@@ -294,20 +320,25 @@ exports[`source-maps should generate source map 1`] = `
       },
       {
         "context": {
-          "ast_kind": "ast_function_call",
-          "func_inline_mode": 0,
-          "func_name": "main",
+          "containing_function": "main",
+          "description": {
+            "ast_kind": "ast_function_call",
+          },
+          "inlining": {
+            "containing_func_inline_mode": 0,
+          },
         },
         "debug": undefined,
         "idx": 5,
         "loc": {
-          "col": 11,
+          "column": 10,
+          "end_column": 0,
+          "end_line": 0,
           "file": "wallet-code.tolk",
           "length": 1,
-          "line": 2,
-          "line_offset": 0,
+          "line": 1,
         },
-        "vars": [
+        "variables": [
           {
             "name": "a",
             "type": "int",
@@ -321,20 +352,26 @@ exports[`source-maps should generate source map 1`] = `
       },
       {
         "context": {
-          "ast_kind": "ast_return_statement",
-          "func_inline_mode": 0,
-          "func_name": "main",
+          "containing_function": "main",
+          "description": {
+            "ast_kind": "ast_return_statement",
+          },
+          "event": "LeaveFunction",
+          "inlining": {
+            "containing_func_inline_mode": 0,
+          },
         },
         "debug": undefined,
         "idx": 6,
         "loc": {
-          "col": 4,
+          "column": 3,
+          "end_column": 0,
+          "end_line": 0,
           "file": "wallet-code.tolk",
           "length": 1,
-          "line": 2,
-          "line_offset": 1,
+          "line": 1,
         },
-        "vars": [
+        "variables": [
           {
             "name": "'2",
             "type": "int",
@@ -342,7 +379,8 @@ exports[`source-maps should generate source map 1`] = `
         ],
       },
     ],
-    "version": "1",
+    "version": "1.0.0",
   },
+  "recompiledCode": "te6cckEBAgEAEwABFP8A9KQT9LzyyAsBAAjTerYJGThbJA==",
 }
 `;

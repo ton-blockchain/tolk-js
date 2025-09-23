@@ -2132,10 +2132,10 @@ ton-assembly@0.3.1:
     "@tonstudio/parser-runtime" "^0.0.1"
     cac "^6.7.14"
 
-ton-source-map@0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/ton-source-map/-/ton-source-map-0.1.0.tgz#ad53847c9776f1f417f28158dc814f58ac7ff0e1"
-  integrity sha512-88y+DUhjnERBpFif3Aza0J5RkjQLer2jvXChb5cBxNKfS65YkgBkj+xrv41YCRwoze9ZJXJPR6SDo4ROA9854w==
+ton-source-map@0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/ton-source-map/-/ton-source-map-0.2.1.tgz#76996e09df3f50f8a7d39398e9aab66694d1d84f"
+  integrity sha512-EeMfdGcHFeBOVa2pxit9RJFUzFM1KwelfxzqqUDURt2h2tcJT0TheOenbcWgpF6FZVLUkSFgysCl1dif2BJ3HA==
 
 ts-jest@^29.2.4:
   version "29.2.4"

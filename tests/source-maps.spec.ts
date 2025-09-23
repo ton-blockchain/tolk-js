@@ -105,23 +105,23 @@ function visualizeMappings(sourceMap: SourceMap, sourceCode: string): string {
   }
 
   for (let i = 0; i < lines.length; i++) {
-    const lineNum = i + 1
+    const lineNum = i
     const line = lines[i]
     const lineLocations = locationsByLine.get(lineNum) || []
 
-    lineLocations.sort((a, b) => a.loc.col - b.loc.col)
+    lineLocations.sort((a, b) => a.loc.column - b.loc.column)
 
     let modifiedLine = line
     let offset = 0
 
     for (const location of lineLocations) {
       const marker = `<#${location.idx}>`
-      const insertPos = location.loc.col + offset
+      const insertPos = location.loc.column + 1 + offset
       modifiedLine = modifiedLine.slice(0, insertPos) + marker + modifiedLine.slice(insertPos)
       offset += marker.length
     }
 
-    result += `${lineNum.toString().padStart(3)} | ${modifiedLine}\n`
+    result += `${(lineNum + 1).toString().padStart(3)} | ${modifiedLine}\n`
   }
 
   result += "\n"
