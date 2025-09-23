@@ -190,9 +190,10 @@ exports[`source-maps should generate source map 1`] = `
     ],
   },
   "highlevelMapping": {
-    "debugCode64": "te6ccgEBAgEAIwABFP8A9KQT9LzyyAsBACjT+VUAA/lVAAR6+VUABbYJ+VUABg==",
+    "compiler_version": "1.1.0",
     "files": [],
     "globals": [],
+    "language": "tolk",
     "locations": [
       {
         "context": {

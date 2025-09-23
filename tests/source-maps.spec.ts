@@ -1,5 +1,5 @@
-import {runTolkCompiler, SourceMap} from "../src";
-import {HighLevelSourceMapEntry} from "../src/high-level-source-map";
+import {runTolkCompiler} from "../src";
+import {HighLevelSourceMapEntry, SourceMap} from "ton-source-map"
 
 describe('source-maps', () => {
   it('should generate source map', async () => {
