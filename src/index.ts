@@ -6,7 +6,7 @@ import wasmBase64 from "./tolkfiftlib.wasm.js"
 import stdlibContents from "./stdlib.tolk.js"
 import {realpath} from "./path-utils"
 import {Cell, runtime, text, trace} from "ton-assembly";
-import {HighLevelSourceMap} from "./high-level-source-map";
+import {AssemblyMapping, HighLevelMapping, SourceMap} from "ton-source-map"
 
 let wasmBinary: Uint8Array | undefined = undefined
 
@@ -22,21 +22,6 @@ export type TolkCompilerConfig = {
   withSrcLineComments?: boolean
   experimentalOptions?: string
   collectSourceMap?: boolean
-}
-
-/**
- * Represents a source map for Tolk code.
- */
-export type SourceMap = {
-  /**
-   * Maps high-level source code to debug sections in assembly code.
-   */
-  readonly highlevelMapping: HighLevelSourceMap
-  /**
-   * Maps code Cells to assembly instructions.
-   * Each instruction can be mapped to specific debug sections.
-   */
-  readonly assemblyMapping: trace.MappingInfo
 }
 
 export type TolkResultSuccess = {
@@ -60,7 +45,7 @@ type TolkCompilerResultSuccess = {
   stderr: string
   fiftSourceMapCode?: string
   sourceMapCodeBoc64?: string
-  sourceMap?: HighLevelSourceMap
+  sourceMap?: HighLevelMapping
 }
 
 export type TolkResultError = {
@@ -192,16 +177,11 @@ export async function runTolkCompiler(compilerConfig: TolkCompilerConfig): Promi
 
     const sourceMapCodeCell = Cell.fromBoc(Buffer.from(result.sourceMapCodeBoc64 ?? result.codeBoc64, "base64"))[0]
     const [cleanCell, mapping] = recompileCell(sourceMapCodeCell);
-    const assemblyMapping = trace.createMappingInfo(mapping)
+    const assemblyMapping: AssemblyMapping = trace.createMappingInfo(mapping)
 
     if (result.sourceMap === undefined) {
       console.warn('Source map was not generated. This is probably a bug in Tolk compiler.')
     }
-
-    const highlevelMapping: HighLevelSourceMap | undefined = result.sourceMap ? {
-      ...result.sourceMap,
-      debugCode64: result.sourceMapCodeBoc64,
-    } : emptyHighlevelSourceMap
 
     return {
       ...result,
@@ -209,10 +189,10 @@ export async function runTolkCompiler(compilerConfig: TolkCompilerConfig): Promi
       sourceMapCodeRecompiledBoc64: cleanCell.toBoc().toString('base64'),
       sourceMapCodeBoc64: result.sourceMapCodeBoc64,
       sourceMap: {
-        highlevelMapping,
+        highlevelMapping: result.sourceMap ?? emptyHighlevelMapping,
         assemblyMapping,
       },
-      sourcesSnapshot
+      sourcesSnapshot,
     }
   }
 
@@ -231,10 +211,11 @@ function recompileCell(cell: Cell): [Cell, runtime.Mapping] {
   return runtime.compileCellWithMapping(parseResult.instructions, {skipRefs: true});
 }
 
-const emptyHighlevelSourceMap = {
+const emptyHighlevelMapping: HighLevelMapping = {
   version: "0",
+  language: "tolk",
+  compiler_version: "",
   files: [],
   globals: [],
   locations: [],
-  debugCode64: "",
 };

@@ -529,17 +529,10 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@ton/core@^0.56.3":
-  version "0.56.3"
-  resolved "https://registry.yarnpkg.com/@ton/core/-/core-0.56.3.tgz#1162764573abb76032eba70f8497e5cb2ea532ee"
-  integrity sha512-HVkalfqw8zqLLPehtq0CNhu5KjVzc7IrbDwDHPjGoOSXmnqSobiWj8a5F+YuWnZnEbQKtrnMGNOOjVw4LG37rg==
-  dependencies:
-    symbol.inspect "1.0.1"
-
-"@ton/core@^0.60.1":
-  version "0.60.1"
-  resolved "https://registry.yarnpkg.com/@ton/core/-/core-0.60.1.tgz#cc9a62fb308d7597b1217dc8e44c7e2dcc0aceaa"
-  integrity sha512-8FwybYbfkk57C3l9gvnlRhRBHbLYmeu0LbB1z9N+dhDz0Z+FJW8w0TJlks8CgHrAFxsT3FlR2LsqFnsauMp38w==
+"@ton/core@^0.61.0":
+  version "0.61.0"
+  resolved "https://registry.yarnpkg.com/@ton/core/-/core-0.61.0.tgz#09b37801cb2f5a942020fcc992be1e99f4b16689"
+  integrity sha512-0qyVfP2dDue2bq80ydXggo2MlufcmzuFk6G94qRrZxvyQ3NSe4UeBTeRf1gQmN7tywgTsX2gS61e4yvJrlUu4Q==
   dependencies:
     symbol.inspect "1.0.1"
 
@@ -1910,6 +1903,11 @@ pkg-dir@^4.2.0:
   dependencies:
     find-up "^4.0.0"
 
+prettier@^3.6.2:
+  version "3.6.2"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.6.2.tgz#ccda02a1003ebbb2bfda6f83a074978f608b9393"
+  integrity sha512-I7AIg5boAr5R0FFtJ6rCfD+LFsWHp81dolrFD8S79U9tb8Az2nGrJncnMSnys+bpQJfRUzqs9hnA81OAA3hCuQ==
+
 pretty-format@^29.0.0, pretty-format@^29.7.0:
   version "29.7.0"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-29.7.0.tgz#ca42c758310f365bfa71a0bda0a807160b776812"
@@ -2126,14 +2124,18 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
-ton-assembly@0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/ton-assembly/-/ton-assembly-0.3.0.tgz#18db59d61da2053e3b9ec38d97f9fc52d3d332f3"
-  integrity sha512-BgHJlmmB0fztmma2KgkSNyWbCY6CvNx7mpxnWvzxglmJYq1rlC7+yC7DzGrT+jiOAHvxOTG2OyOkAUCX6A85mQ==
+ton-assembly@0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/ton-assembly/-/ton-assembly-0.3.1.tgz#be5d9c75ed36e4297b5956e72da5f9c15fff8468"
+  integrity sha512-AEbjnN4Osy+gqoNuNaY8YfUTTsyhbtr8Q8UexHL5M1FT45SzsXTer9UDakFo8tyoq3Uddfgy6d46AHUEGd8mvw==
   dependencies:
-    "@ton/core" "^0.60.1"
     "@tonstudio/parser-runtime" "^0.0.1"
     cac "^6.7.14"
+
+ton-source-map@0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/ton-source-map/-/ton-source-map-0.1.0.tgz#ad53847c9776f1f417f28158dc814f58ac7ff0e1"
+  integrity sha512-88y+DUhjnERBpFif3Aza0J5RkjQLer2jvXChb5cBxNKfS65YkgBkj+xrv41YCRwoze9ZJXJPR6SDo4ROA9854w==
 
 ts-jest@^29.2.4:
   version "29.2.4"
