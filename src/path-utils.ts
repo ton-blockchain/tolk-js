@@ -87,7 +87,8 @@ export function realpath(p: string): string {
   let isAbsolute = p.charCodeAt(0) === SLASH
   let path = posixNormalize(p, !isAbsolute)
 
-  if (isAbsolute) { // posixNormalize() drops leading slash
+  if (isAbsolute) {
+    // posixNormalize() drops leading slash
     return '/' + path
   }
   return path.length === 0 ? '.' : path

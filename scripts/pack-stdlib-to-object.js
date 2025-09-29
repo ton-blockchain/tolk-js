@@ -4,7 +4,10 @@ let out = `// stdlib files are stored as strings in order to make it work on web
 module.exports = {\n\n`
 
 let fileNames = [
-  ...fs.readdirSync('./src/tolk-stdlib').filter(s => s.endsWith('.tolk')).sort(),
+  ...fs
+    .readdirSync('./src/tolk-stdlib')
+    .filter(s => s.endsWith('.tolk'))
+    .sort(),
 ]
 
 for (let fileName of fileNames) {
@@ -12,7 +15,7 @@ for (let fileName of fileNames) {
   out += `'@stdlib/${fileName}':\`${contents.replace(/`/g, '\\`')}\`,\n\n`
 }
 
-out += "};\n"
+out += '};\n'
 fs.writeFileSync('./src/stdlib.tolk.js', out)
 
 // note, that Asm.fif and similar are embedded into wasm binary,
