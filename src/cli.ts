@@ -47,7 +47,7 @@ Options:
   }
 
   if (args._.length !== 1) {
-    throw 'entrypointFileName wasn\'t specified. Run with -h to see help.'
+    throw "entrypointFileName wasn't specified. Run with -h to see help."
   }
 
   console.log(`Compiling using Tolk v${version}`)
@@ -64,14 +64,21 @@ Options:
   }
 
   if (args['--output-json']) {
-    fs.writeFileSync(args['--output-json'], JSON.stringify({
-      artifactVersion: 1,
-      tolkVersion: version,
-      fiftCode: result.fiftCode,
-      codeBoc64: result.codeBoc64,
-      codeHashHex: result.codeHashHex,
-      sourcesSnapshot: result.sourcesSnapshot,
-    }, null, 2))
+    fs.writeFileSync(
+      args['--output-json'],
+      JSON.stringify(
+        {
+          artifactVersion: 1,
+          tolkVersion: version,
+          fiftCode: result.fiftCode,
+          codeBoc64: result.codeBoc64,
+          codeHashHex: result.codeHashHex,
+          sourcesSnapshot: result.sourcesSnapshot,
+        },
+        null,
+        2,
+      ),
+    )
   }
 
   if (args['--output-fift']) {

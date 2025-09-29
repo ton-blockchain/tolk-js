@@ -1,10 +1,10 @@
 // @ts-ignore
-import wasmModule from "./tolkfiftlib.js"
+import wasmModule from './tolkfiftlib.js'
 // @ts-ignore
-import wasmBase64 from "./tolkfiftlib.wasm.js"
+import wasmBase64 from './tolkfiftlib.wasm.js'
 // @ts-ignore
-import stdlibContents from "./stdlib.tolk.js"
-import {realpath} from "./path-utils"
+import stdlibContents from './stdlib.tolk.js'
+import {realpath} from './path-utils'
 
 let wasmBinary: Uint8Array | undefined = undefined
 
@@ -22,16 +22,16 @@ export type TolkCompilerConfig = {
 }
 
 export type TolkResultSuccess = {
-  status: "ok"
+  status: 'ok'
   fiftCode: string
   codeBoc64: string
   codeHashHex: string
   stderr: string
-  sourcesSnapshot: { filename: string, contents: string }[]
+  sourcesSnapshot: {filename: string; contents: string}[]
 }
 
 export type TolkResultError = {
-  status: "error"
+  status: 'error'
   message: string
 }
 
@@ -54,10 +54,12 @@ function copyFromCString(mod: WasmModule, inPtr: any): string {
 
 async function instantiateWasmModule() {
   if (wasmBinary === undefined) {
-    if (typeof Buffer !== 'undefined') {  // node.js
+    if (typeof Buffer !== 'undefined') {
+      // node.js
       wasmBinary = new Uint8Array(Buffer.from(wasmBase64, 'base64'))
-    } else if (typeof window !== 'undefined') {  // browser
-      const binaryString = atob(wasmBase64)      // window.atob() is fast and safe for valid base64 strings
+    } else if (typeof window !== 'undefined') {
+      // browser
+      const binaryString = atob(wasmBase64) // window.atob() is fast and safe for valid base64 strings
       wasmBinary = new Uint8Array(binaryString.length)
       for (let i = 0; i < binaryString.length; i++) {
         wasmBinary[i] = binaryString.charCodeAt(i)
@@ -77,33 +79,41 @@ export async function getTolkCompilerVersion(): Promise<string> {
   return result.tolkVersion
 }
 
-export async function runTolkCompiler(compilerConfig: TolkCompilerConfig): Promise<TolkResultSuccess | TolkResultError> {
+export async function runTolkCompiler(
+  compilerConfig: TolkCompilerConfig,
+): Promise<TolkResultSuccess | TolkResultError> {
   const mod = await instantiateWasmModule()
   const allocatedPointers = []
   const sourcesSnapshot: TolkResultSuccess['sourcesSnapshot'] = []
 
   // see tolk-wasm.cpp: typedef void (*WasmFsReadCallback)(int, char const*, char**, char**)
-  const callbackPtr = mod.addFunction(function (kind: number, dataPtr: any, destContents: any, destError: any) {
-    switch (kind) { // enum ReadCallback::Kind in C++
-      case 0:       // realpath
-        let relativeFilename = copyFromCString(mod, dataPtr)  // from `import` statement, relative to cur file
+  const callbackPtr = mod.addFunction(function (
+    kind: number,
+    dataPtr: any,
+    destContents: any,
+    destError: any,
+  ) {
+    // enum ReadCallback::Kind in C++
+    switch (kind) {
+      case 0: // realpath
+        let relativeFilename = copyFromCString(mod, dataPtr) // from `import` statement, relative to cur file
         if (!relativeFilename.endsWith('.tolk')) {
           relativeFilename += '.tolk'
         }
         allocatedPointers.push(copyToCStringPtr(mod, realpath(relativeFilename), destContents))
         break
-      case 1:       // read file
+      case 1: // read file
         try {
           const filename = copyFromCString(mod, dataPtr) // already normalized (as returned above)
           if (filename.startsWith('@stdlib/')) {
             if (filename in stdlibContents) {
               allocatedPointers.push(copyToCStringPtr(mod, stdlibContents[filename], destContents))
             } else {
-              allocatedPointers.push(copyToCStringPtr(mod, filename + " not found", destError))
+              allocatedPointers.push(copyToCStringPtr(mod, filename + ' not found', destError))
             }
           } else {
             const contents = compilerConfig.fsReadCallback(filename)
-            sourcesSnapshot.push({ filename, contents })
+            sourcesSnapshot.push({filename, contents})
             allocatedPointers.push(copyToCStringPtr(mod, contents, destContents))
           }
         } catch (err: any) {
@@ -116,7 +126,8 @@ export async function runTolkCompiler(compilerConfig: TolkCompilerConfig): Promi
     }
   }, 'viiii')
 
-  const configStr = JSON.stringify({  // undefined fields won't be present, defaults will be used, see tolk-wasm.cpp
+  // undefined fields won't be present, defaults will be used, see tolk-wasm.cpp
+  const configStr = JSON.stringify({
     entrypointFileName: compilerConfig.entrypointFileName,
     optimizationLevel: compilerConfig.optimizationLevel,
     withStackComments: compilerConfig.withStackComments,

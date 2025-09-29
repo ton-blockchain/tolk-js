@@ -1,4 +1,4 @@
-import {realpath} from "../src/path-utils";
+import {realpath} from '../src/path-utils'
 
 describe('realpath', () => {
   it('should not change already normalized', () => {
