@@ -4,12 +4,25 @@ import fs from "fs";
 const EXPECT_TO_CONTAIN = [
 `
   check1() PROC:<{
-    NEWC
-    ENDC
-    CTOS
+    x{} PUSHSLICE
     HASHSU
   }>
+`,
 `
+  check2() PROC:<{
+    x{} PUSHSLICE
+    LDOPTSTDADDR
+    DROP
+  }>
+`,
+`
+  check3() PROC:<{
+    x{} PUSHSLICE
+    NEWC
+    STSTDADDR
+    ENDC
+  }>
+`,
 ]
 
 const EXPECT_NOT_TO_CONTAIN = [
