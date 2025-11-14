@@ -529,10 +529,10 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@ton/core@^0.56.3":
-  version "0.56.3"
-  resolved "https://registry.yarnpkg.com/@ton/core/-/core-0.56.3.tgz#1162764573abb76032eba70f8497e5cb2ea532ee"
-  integrity sha512-HVkalfqw8zqLLPehtq0CNhu5KjVzc7IrbDwDHPjGoOSXmnqSobiWj8a5F+YuWnZnEbQKtrnMGNOOjVw4LG37rg==
+"@ton/core@^0.61.0":
+  version "0.61.0"
+  resolved "https://registry.yarnpkg.com/@ton/core/-/core-0.61.0.tgz#09b37801cb2f5a942020fcc992be1e99f4b16689"
+  integrity sha512-0qyVfP2dDue2bq80ydXggo2MlufcmzuFk6G94qRrZxvyQ3NSe4UeBTeRf1gQmN7tywgTsX2gS61e4yvJrlUu4Q==
   dependencies:
     symbol.inspect "1.0.1"
 
@@ -551,6 +551,11 @@
     "@ton/crypto-primitives" "2.1.0"
     jssha "3.2.0"
     tweetnacl "1.0.3"
+
+"@tonstudio/parser-runtime@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@tonstudio/parser-runtime/-/parser-runtime-0.0.1.tgz#469955fb7ea354d4fadaa5964359b11fd17f926b"
+  integrity sha512-5s4fLkXWxa4SAd7QGGvJXe13GakEo0J3VF5dUI/i3A//bGZxMwCp1FcnbErpNs3y0LcAZoXE5FCUnDowDQptqw==
 
 "@types/babel__core@^7.1.14":
   version "7.20.5"
@@ -814,6 +819,11 @@ buffer-from@^1.0.0:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.1.2.tgz#2b146a6fd72e80b4f55d255f35ed59a3a9a41bd5"
   integrity sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==
+
+cac@^6.7.14:
+  version "6.7.14"
+  resolved "https://registry.yarnpkg.com/cac/-/cac-6.7.14.tgz#804e1e6f506ee363cb0e3ccbb09cad5dd9870959"
+  integrity sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ==
 
 callsites@^3.0.0:
   version "3.1.0"
@@ -1893,6 +1903,11 @@ pkg-dir@^4.2.0:
   dependencies:
     find-up "^4.0.0"
 
+prettier@^3.6.2:
+  version "3.6.2"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.6.2.tgz#ccda02a1003ebbb2bfda6f83a074978f608b9393"
+  integrity sha512-I7AIg5boAr5R0FFtJ6rCfD+LFsWHp81dolrFD8S79U9tb8Az2nGrJncnMSnys+bpQJfRUzqs9hnA81OAA3hCuQ==
+
 pretty-format@^29.0.0, pretty-format@^29.7.0:
   version "29.7.0"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-29.7.0.tgz#ca42c758310f365bfa71a0bda0a807160b776812"
@@ -2108,6 +2123,19 @@ to-regex-range@^5.0.1:
   integrity sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==
   dependencies:
     is-number "^7.0.0"
+
+ton-assembly@0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/ton-assembly/-/ton-assembly-0.3.1.tgz#be5d9c75ed36e4297b5956e72da5f9c15fff8468"
+  integrity sha512-AEbjnN4Osy+gqoNuNaY8YfUTTsyhbtr8Q8UexHL5M1FT45SzsXTer9UDakFo8tyoq3Uddfgy6d46AHUEGd8mvw==
+  dependencies:
+    "@tonstudio/parser-runtime" "^0.0.1"
+    cac "^6.7.14"
+
+ton-source-map@0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/ton-source-map/-/ton-source-map-0.2.1.tgz#76996e09df3f50f8a7d39398e9aab66694d1d84f"
+  integrity sha512-EeMfdGcHFeBOVa2pxit9RJFUzFM1KwelfxzqqUDURt2h2tcJT0TheOenbcWgpF6FZVLUkSFgysCl1dif2BJ3HA==
 
 ts-jest@^29.2.4:
   version "29.2.4"

@@ -1,0 +1,386 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`source-maps should generate correct source map for lazy match 1`] = `
+"
+  1 | struct (0x1) Single {
+  2 |     x: int32
+  3 | }
+  4 | 
+  5 | struct (0x2) Pair {
+  6 |     x: int32
+  7 |     y: int32
+  8 | }
+  9 | 
+ 10 | type Data = Single | Pair
+ 11 | 
+ 12 | fun <#3>main(data: slice) {
+ 13 |     <#4>val thing = <#9>lazy Data<#5>.fromSlice(data);
+ 14 |     
+ 15 |     match (thing) {
+ 16 |         <#10>Single => {
+ 17 |             <#11>throw thing.x;
+ 18 |         }
+ 19 |         <#12>Pair => {
+ 20 |             <#14>throw thing.x <#13>+ thing.y;
+ 21 |         }
+ 22 |         else => {
+ 23 |             <#16>return <#15>10;
+ 24 |         }
+ 25 |     }
+ 26 | }
+
+Cell 1821d664...:
+    0: SETCP
+   16: DICTPUSHCONST
+   40: DICTIGETJMPZ
+   56: THROWARG
+   56: RET
+
+Cell 259edd3f...:
+    0: SDBEGINSQ [#3,#4,#5,#6,#7,#8,#9,#10]
+   32: PUSHCONT_SHORT
+   40: PLDI
+   64: THROWANY [#11]
+   64: RET
+   80: IFJMP
+   88: SDBEGINSQ [#12]
+  120: PUSHCONT
+  136: LDI
+  152: PLDI
+  176: ADD [#13]
+  184: THROWANY [#14]
+  184: RET
+  200: IFJMP
+  208: DROP [#15]
+  216: PUSHINT_4
+  216: RET [#16]
+
+"
+`;
+
+exports[`source-maps should generate correct source map for simple function 1`] = `
+"
+  1 | fun <#3>main(a: int) {
+  2 |     <#4>var x = a <#6>+ <#5>1;
+  3 |     <#9>return <#8>max(x, <#7>10);
+  4 | }
+
+Cell 808c59db...:
+    0: SETCP
+   16: DICTPUSHCONST
+   40: DICTIGETJMPZ
+   56: THROWARG
+   56: RET
+
+Cell 71e0ec90...:
+    0: INC [#3,#4,#5,#6]
+    8: PUSHINT_4 [#7]
+   16: MAX [#8]
+   16: RET [#9]
+
+"
+`;
+
+exports[`source-maps should generate source map 1`] = `
+{
+  "assemblyMapping": {
+    "cells": {
+      "8bea7604d0b072b209c4e479a40999439f4f67f574f4a47691381dda9451d308": {
+        "instructions": [
+          {
+            "debugSections": [
+              3,
+              4,
+            ],
+            "loc": {
+              "file": "out.tasm",
+              "line": 5,
+              "otherLines": [],
+            },
+            "name": "PUSHINT_4",
+            "offset": 0,
+          },
+          {
+            "debugSections": [
+              5,
+            ],
+            "loc": {
+              "file": "out.tasm",
+              "line": 7,
+              "otherLines": [],
+            },
+            "name": "MAX",
+            "offset": 8,
+          },
+          {
+            "debugSections": [
+              6,
+            ],
+            "loc": {
+              "file": "out.tasm",
+              "line": 7,
+              "otherLines": [],
+            },
+            "name": "RET",
+            "offset": 8,
+          },
+        ],
+      },
+      "fd8692835670899ef97044b0a2d78da8c72156229c1f48102feed7753ceadef0": {
+        "instructions": [
+          {
+            "debugSections": [],
+            "loc": {
+              "file": "out.tasm",
+              "line": 0,
+              "otherLines": [],
+            },
+            "name": "SETCP",
+            "offset": 0,
+          },
+          {
+            "debugSections": [],
+            "loc": {
+              "file": "out.tasm",
+              "line": 1,
+              "otherLines": [],
+            },
+            "name": "DICTPUSHCONST",
+            "offset": 16,
+          },
+          {
+            "debugSections": [],
+            "loc": {
+              "file": "out.tasm",
+              "line": 11,
+              "otherLines": [],
+            },
+            "name": "DICTIGETJMPZ",
+            "offset": 40,
+          },
+          {
+            "debugSections": [],
+            "loc": {
+              "file": "out.tasm",
+              "line": 12,
+              "otherLines": [],
+            },
+            "name": "THROWARG",
+            "offset": 56,
+          },
+          {
+            "debugSections": [],
+            "loc": {
+              "file": "out.tasm",
+              "line": 12,
+              "otherLines": [],
+            },
+            "name": "RET",
+            "offset": 56,
+          },
+        ],
+      },
+    },
+    "dictionaryCells": [
+      {
+        "cell": "a9e0df6bc8c41cca2abd6f8bbc8de4da6a520b743348e40b468cce4d251a674a",
+        "dataCell": "8bea7604d0b072b209c4e479a40999439f4f67f574f4a47691381dda9451d308",
+        "offset": 8,
+      },
+    ],
+  },
+  "highlevelMapping": {
+    "compiler_version": "1.1.0",
+    "files": [],
+    "globals": [],
+    "language": "tolk",
+    "locations": [
+      {
+        "context": {
+          "containing_function": "MapLookupResult<slice>.loadValue",
+          "description": {
+            "ast_kind": "ast_function_declaration",
+          },
+          "event": "EnterFunction",
+          "inlining": {
+            "containing_func_inline_mode": 0,
+          },
+        },
+        "debug": undefined,
+        "idx": 0,
+        "loc": {
+          "column": 26,
+          "end_column": 0,
+          "end_line": 0,
+          "file": "@stdlib/common.tolk",
+          "length": 1,
+          "line": 926,
+        },
+        "variables": [],
+      },
+      {
+        "context": {
+          "containing_function": "MapLookupResult<slice>.loadValue",
+          "description": {
+            "ast_kind": "ast_not_null_operator",
+          },
+          "inlining": {
+            "containing_func_inline_mode": 0,
+          },
+        },
+        "debug": undefined,
+        "idx": 1,
+        "loc": {
+          "column": 14,
+          "end_column": 0,
+          "end_line": 0,
+          "file": "@stdlib/common.tolk",
+          "length": 1,
+          "line": 927,
+        },
+        "variables": [],
+      },
+      {
+        "context": {
+          "containing_function": "MapLookupResult<slice>.loadValue",
+          "description": {
+            "ast_kind": "ast_return_statement",
+          },
+          "event": "LeaveFunction",
+          "inlining": {
+            "containing_func_inline_mode": 0,
+          },
+        },
+        "debug": undefined,
+        "idx": 2,
+        "loc": {
+          "column": 3,
+          "end_column": 0,
+          "end_line": 0,
+          "file": "@stdlib/common.tolk",
+          "length": 1,
+          "line": 927,
+        },
+        "variables": [],
+      },
+      {
+        "context": {
+          "containing_function": "main",
+          "description": {
+            "ast_kind": "ast_function_declaration",
+          },
+          "event": "EnterFunction",
+          "inlining": {
+            "containing_func_inline_mode": 0,
+          },
+        },
+        "debug": undefined,
+        "idx": 3,
+        "loc": {
+          "column": 3,
+          "end_column": 0,
+          "end_line": 0,
+          "file": "wallet-code.tolk",
+          "length": 1,
+          "line": 0,
+        },
+        "variables": [
+          {
+            "name": "a",
+            "type": "int",
+          },
+        ],
+      },
+      {
+        "context": {
+          "containing_function": "main",
+          "description": {
+            "ast_kind": "ast_int_const",
+          },
+          "inlining": {
+            "containing_func_inline_mode": 0,
+          },
+        },
+        "debug": undefined,
+        "idx": 4,
+        "loc": {
+          "column": 17,
+          "end_column": 0,
+          "end_line": 0,
+          "file": "wallet-code.tolk",
+          "length": 1,
+          "line": 1,
+        },
+        "variables": [
+          {
+            "name": "a",
+            "type": "int",
+          },
+        ],
+      },
+      {
+        "context": {
+          "containing_function": "main",
+          "description": {
+            "ast_kind": "ast_function_call",
+          },
+          "inlining": {
+            "containing_func_inline_mode": 0,
+          },
+        },
+        "debug": undefined,
+        "idx": 5,
+        "loc": {
+          "column": 10,
+          "end_column": 0,
+          "end_line": 0,
+          "file": "wallet-code.tolk",
+          "length": 1,
+          "line": 1,
+        },
+        "variables": [
+          {
+            "name": "a",
+            "type": "int",
+          },
+          {
+            "constant_value": "10",
+            "name": "'1",
+            "type": "int",
+          },
+        ],
+      },
+      {
+        "context": {
+          "containing_function": "main",
+          "description": {
+            "ast_kind": "ast_return_statement",
+          },
+          "event": "LeaveFunction",
+          "inlining": {
+            "containing_func_inline_mode": 0,
+          },
+        },
+        "debug": undefined,
+        "idx": 6,
+        "loc": {
+          "column": 3,
+          "end_column": 0,
+          "end_line": 0,
+          "file": "wallet-code.tolk",
+          "length": 1,
+          "line": 1,
+        },
+        "variables": [
+          {
+            "name": "'2",
+            "type": "int",
+          },
+        ],
+      },
+    ],
+    "version": "1.0.0",
+  },
+  "recompiledCode": "te6cckEBAgEAEwABFP8A9KQT9LzyyAsBAAjTerYJGThbJA==",
+}
+`;

@@ -5,6 +5,8 @@ import wasmBase64 from "./tolkfiftlib.wasm.js"
 // @ts-ignore
 import stdlibContents from "./stdlib.tolk.js"
 import {realpath} from "./path-utils"
+import {Cell, runtime, text, trace} from "ton-assembly";
+import {AssemblyMapping, HighLevelMapping, SourceMap} from "ton-source-map"
 
 let wasmBinary: Uint8Array | undefined = undefined
 
@@ -19,6 +21,7 @@ export type TolkCompilerConfig = {
   withStackComments?: boolean
   withSrcLineComments?: boolean
   experimentalOptions?: string
+  collectSourceMap?: boolean
 }
 
 export type TolkResultSuccess = {
@@ -27,7 +30,22 @@ export type TolkResultSuccess = {
   codeBoc64: string
   codeHashHex: string
   stderr: string
+  fiftSourceMapCode?: string
+  sourceMapCodeRecompiledBoc64?: string
+  sourceMapCodeBoc64?: string
+  sourceMap?: SourceMap
   sourcesSnapshot: { filename: string, contents: string }[]
+}
+
+type TolkCompilerResultSuccess = {
+  status: "ok"
+  fiftCode: string
+  codeBoc64: string
+  codeHashHex: string
+  stderr: string
+  fiftSourceMapCode?: string
+  sourceMapCodeBoc64?: string
+  sourceMap?: HighLevelMapping
 }
 
 export type TolkResultError = {
@@ -122,6 +140,7 @@ export async function runTolkCompiler(compilerConfig: TolkCompilerConfig): Promi
     withStackComments: compilerConfig.withStackComments,
     withSrcLineComments: compilerConfig.withSrcLineComments,
     experimentalOptions: compilerConfig.experimentalOptions,
+    collectSourceMap: compilerConfig.collectSourceMap,
   })
 
   const configStrPtr = copyToCStringAllocating(mod, configStr)
@@ -129,10 +148,75 @@ export async function runTolkCompiler(compilerConfig: TolkCompilerConfig): Promi
 
   const resultPtr = mod._tolk_compile(configStrPtr, callbackPtr)
   allocatedPointers.push(resultPtr)
-  const result: TolkResultSuccess | TolkResultError = JSON.parse(copyFromCString(mod, resultPtr))
+  const result: TolkCompilerResultSuccess | TolkResultError = JSON.parse(copyFromCString(mod, resultPtr))
 
   allocatedPointers.forEach(ptr => mod._free(ptr))
   mod.removeFunction(callbackPtr)
 
-  return result.status === 'error' ? result : {...result, sourcesSnapshot}
+  if (result.status === 'error') {
+    return result
+  }
+
+  if (compilerConfig.collectSourceMap) {
+    // When we compile with a source map enabled, the compiler generates special DEBUGMARK %id
+    // instructions that describe the start of a code section with a specific ID.
+    // These instructions, along with the rest of the Fifth code, are compiled into "poisoned"
+    // bitcode.
+    // The result of this compilation is stored in the `sourceMapCodeBoc64` field.
+    //
+    // The code generated in this way is not runnable, since the DEBUGMARK instruction is
+    // unknown to TVM, running such code directly will cause TVM to crash.
+    //
+    // And this is where the further code comes into play.
+    //
+    // Its task is to disassemble bitcode back into instructions, including DEBUGMARK, and
+    // compile it back into bitcode.
+    // Thanks to DEBUGMARK instructions, upon recompilation, TASM can map of each instruction
+    // and the debug section, thus getting a complete source code map that is accurately down
+    // to the specific TVM instruction.
+
+    const sourceMapCodeCell = Cell.fromBase64(result.sourceMapCodeBoc64 ?? result.codeBoc64)
+    const [cleanCell, mapping] = recompileCell(sourceMapCodeCell);
+    const assemblyMapping: AssemblyMapping = trace.createMappingInfo(mapping)
+
+    if (result.sourceMap === undefined) {
+      console.warn('Source map was not generated. This is probably a bug in Tolk compiler.')
+    }
+
+    return {
+      ...result,
+      codeBoc64: result.codeBoc64,
+      sourceMapCodeRecompiledBoc64: cleanCell.toBoc().toString('base64'),
+      sourceMapCodeBoc64: result.sourceMapCodeBoc64,
+      sourceMap: {
+        highlevelMapping: result.sourceMap ?? emptyHighlevelMapping,
+        assemblyMapping,
+        recompiledCode: cleanCell.toBoc().toString('base64'),
+      },
+      sourcesSnapshot,
+    }
+  }
+
+  return {...result, sourcesSnapshot, sourceMap: undefined}
 }
+
+function recompileCell(cell: Cell): [Cell, runtime.Mapping] {
+  const instructions = runtime.decompileCell(cell);
+  const assembly = text.print(instructions);
+
+  const parseResult = text.parse("out.tasm", assembly);
+  if (parseResult.$ === "ParseFailure") {
+    throw new Error("Cannot parse resulting text Assembly");
+  }
+
+  return runtime.compileCellWithMapping(parseResult.instructions, {skipRefs: true});
+}
+
+const emptyHighlevelMapping: HighLevelMapping = {
+  version: "0",
+  language: "tolk",
+  compiler_version: "",
+  files: [],
+  globals: [],
+  locations: [],
+};
