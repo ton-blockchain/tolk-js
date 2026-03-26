@@ -82,7 +82,6 @@ The function `runTolkCompiler()` accepts the following properties (look up `Tolk
 * `optimizationLevel` (default 2) — controls Tolk compiler stack optimizer
 * `withStackComments` (default false) — Fift output will contain stack comments, if you wish to debug its output
 * `withSrcLineComments` (default false) — Fift output will contain line comments from original .tolk files
-* `experimentalOptions` (default '') — you can pass experimental compiler options here
 
 
 ## Embedded stdlib functions

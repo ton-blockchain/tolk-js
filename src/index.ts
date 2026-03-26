@@ -18,7 +18,8 @@ export type TolkCompilerConfig = {
   optimizationLevel?: number
   withStackComments?: boolean
   withSrcLineComments?: boolean
-  experimentalOptions?: string
+  experimentalOptions?: string              // deprecated, not used anymore, to be deleted
+  pathMappings?: Record<string, string>     // { "@third_party": "/absolute/folder", ... }
 }
 
 export type TolkResultSuccess = {
@@ -26,6 +27,7 @@ export type TolkResultSuccess = {
   fiftCode: string
   codeBoc64: string
   codeHashHex: string
+  tolkVersion: string
   stderr: string
   sourcesSnapshot: { filename: string, contents: string }[]
 }
@@ -70,7 +72,7 @@ async function instantiateWasmModule() {
 export async function getTolkCompilerVersion(): Promise<string> {
   const mod = await instantiateWasmModule()
 
-  const versionJsonPtr = mod._version()
+  const versionJsonPtr = mod._tolk_version()
   const result = JSON.parse(copyFromCString(mod, versionJsonPtr))
   mod._free(versionJsonPtr)
 
@@ -82,20 +84,34 @@ export async function runTolkCompiler(compilerConfig: TolkCompilerConfig): Promi
   const allocatedPointers = []
   const sourcesSnapshot: TolkResultSuccess['sourcesSnapshot'] = []
 
-  // see tolk-wasm.cpp: typedef void (*WasmFsReadCallback)(int, char const*, char**, char**)
-  const callbackPtr = mod.addFunction(function (kind: number, dataPtr: any, destContents: any, destError: any) {
+  // see tolk-wasm.cpp: typedef void (*WasmFsReadCallback)(int, char const*, char**, char**, void*)
+  const callbackPtr = mod.addFunction(function (kind: number, dataPtr: any, destContents: any, destError: any, callbackPayload: any) {
     switch (kind) { // enum ReadCallback::Kind in C++
       case 0:       // realpath
         let relativeFilename = copyFromCString(mod, dataPtr)  // from `import` statement, relative to cur file
-        if (!relativeFilename.endsWith('.tolk')) {
+        // handle import "@third_party/utils", map it to import "/absolute/folder/utils"
+        if (relativeFilename.startsWith('@') && !relativeFilename.startsWith('@stdlib/') && !relativeFilename.startsWith('@fiftlib/')) {
+          const slash = relativeFilename.indexOf('/');
+          if (slash !== -1) {
+            const atPrefix = relativeFilename.substring(0, slash);
+            const absFolder = compilerConfig.pathMappings?.[atPrefix];
+            if (absFolder == null || absFolder === '') {
+              allocatedPointers.push(copyToCStringPtr(mod, `path mapping ${atPrefix} was not registered`, destError))
+              break
+            }
+            relativeFilename = absFolder + relativeFilename.substring(slash)
+          }
+        }
+        if (!relativeFilename.endsWith('.tolk') && !relativeFilename.endsWith('.fif')) {
           relativeFilename += '.tolk'
         }
+        // files with the same realpath are considered equal
         allocatedPointers.push(copyToCStringPtr(mod, realpath(relativeFilename), destContents))
         break
       case 1:       // read file
         try {
           const filename = copyFromCString(mod, dataPtr) // already normalized (as returned above)
-          if (filename.startsWith('@stdlib/')) {
+          if (filename.startsWith('@stdlib/') || filename.startsWith('@fiftlib/')) {
             if (filename in stdlibContents) {
               allocatedPointers.push(copyToCStringPtr(mod, stdlibContents[filename], destContents))
             } else {
@@ -114,20 +130,21 @@ export async function runTolkCompiler(compilerConfig: TolkCompilerConfig): Promi
         allocatedPointers.push(copyToCStringPtr(mod, 'Unknown callback kind=' + kind, destError))
         break
     }
-  }, 'viiii')
+  }, 'viiiii')
 
   const configStr = JSON.stringify({  // undefined fields won't be present, defaults will be used, see tolk-wasm.cpp
     entrypointFileName: compilerConfig.entrypointFileName,
     optimizationLevel: compilerConfig.optimizationLevel,
     withStackComments: compilerConfig.withStackComments,
     withSrcLineComments: compilerConfig.withSrcLineComments,
-    experimentalOptions: compilerConfig.experimentalOptions,
   })
 
   const configStrPtr = copyToCStringAllocating(mod, configStr)
   allocatedPointers.push(configStrPtr)
 
-  const resultPtr = mod._tolk_compile(configStrPtr, callbackPtr)
+  const callbackPayload = null    // will be available in the callback above, but we don't need any for tolk-js
+
+  const resultPtr = mod._tolk_compile(configStrPtr, callbackPtr, callbackPayload)
   allocatedPointers.push(resultPtr)
   const result: TolkResultSuccess | TolkResultError = JSON.parse(copyFromCString(mod, resultPtr))
 

@@ -11,13 +11,11 @@ async function tolkJsCli() {
     '--require-version': String,
     '--output-json': String,
     '--output-fift': String,
-    '--experimental-options': String,
     '--cwd': String,
 
     '-v': '--version',
     '-h': '--help',
     '-o': '--output-json',
-    '-x': '--experimental-options',
     '-C': '--cwd',
   })
 
@@ -29,7 +27,6 @@ Options:
 --require-version <version> — exit if Tolk compiler version differs from the required
 --output-json <filename>, -o <filename> — output .json file with BoC, Fift code, and some other stuff
 --output-fif <filename> - output .fif file with Fift code output
---experimental-options <names> - set experimental compiler options, comma-separated
 --cwd <path>, -C <path> — sets cwd to locate .tolk files (doesn't affect output paths)
 `)
     process.exit(0)
@@ -55,7 +52,6 @@ Options:
   const cwd = args['--cwd']
   const result = await runTolkCompiler({
     entrypointFileName: args._[0],
-    experimentalOptions: args['--experimental-options'],
     fsReadCallback: p => fs.readFileSync(cwd ? path.join(cwd, p) : p, 'utf-8'),
   })
 

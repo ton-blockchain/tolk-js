@@ -10,7 +10,7 @@ fun check2() {
 
 @method_id(103)
 fun check3() {
-    return ("" as address).toCell()
+    return ("".literalSlice() as address).toCell()
 }
 
 fun main() {

@@ -5,7 +5,9 @@ const EXPECT_TO_CONTAIN = [
 `
   check1() PROC:<{
     x{} PUSHSLICE
-    HASHSU
+    NEWC
+    STSLICE
+    HASHBU
   }>
 `,
 `
@@ -26,7 +28,7 @@ const EXPECT_TO_CONTAIN = [
 ]
 
 const EXPECT_NOT_TO_CONTAIN = [
-    'HASHBU',
+    'HASHSU',
 ]
 
 describe('codegen-checks', () => {

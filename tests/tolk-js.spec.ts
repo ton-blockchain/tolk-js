@@ -3,7 +3,7 @@ import fs from "fs";
 import {Cell} from "@ton/core";
 
 describe('tolk-js', () => {
-  const walletCodeCellHash = "hA3nAz+xEJePYGrDyjJ+BXBcxSp9Y2xaAFLRgGntfDs="
+  const walletCodeCellHash = "Bg+vB15TzyHO+CoGkTUbOAJbJEthskyCowQISlng0fI="
 
   it('npm package version should match Tolk version', async () => {
     let tolkVersion = await getTolkCompilerVersion()
@@ -96,5 +96,37 @@ describe('tolk-js', () => {
 
     expect(result.status).toEqual('error')
     expect(result.message).toContain("@stdlib/nonexisting.tolk not found")
+  })
+
+  it('should handle pathMappings', async () => {
+    let queriedFiles = [] as string[]
+    let result = await runTolkCompiler({
+      entrypointFileName: __dirname + "/contracts/has-mapping-1.tolk",
+      pathMappings: {
+        '@tolk-js': __dirname + '/../',
+        '@imports': __dirname + '/imports/',
+      },
+      fsReadCallback: path => {
+        queriedFiles.push(path.substring(__dirname.length))
+        return fs.readFileSync(path, 'utf-8')
+      }
+    }) as TolkResultSuccess
+
+    expect(result.status).toEqual('ok')
+    expect(queriedFiles).toStrictEqual([
+      "/contracts/has-mapping-1.tolk",
+      "/imports/wallet-nothing.tolk",
+      "/imports/wallet-storage.tolk"
+    ])
+  })
+
+  it('should gracefully fail on invalid import', async () => {
+    let result = await runTolkCompiler({
+      entrypointFileName: "main.tolk",
+      fsReadCallback: _ => 'import "@asdf/me"'
+    }) as TolkResultError
+
+    expect(result.status).toEqual('error')
+    expect(result.message).toContain('path mapping @asdf was not registered')
   })
 })
