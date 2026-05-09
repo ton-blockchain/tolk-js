@@ -14,8 +14,6 @@ tolk-js works both in Node.js and browser (does not depend on filesystem).
 ## Installation
 
 ```
-yarn add @ton/tolk-js
-// or
 npm install @ton/tolk-js
 ```
 

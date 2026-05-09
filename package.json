@@ -8,12 +8,12 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "rm -rf dist && tsc && yarn wasm:pack && yarn stdlib:pack && yarn wasm:dist && yarn stdlib:dist",
+    "build": "rm -rf dist && tsc && npm run wasm:pack && npm run stdlib:pack && npm run wasm:dist && npm run stdlib:dist",
     "wasm:pack": "node scripts/pack-wasm-to-base64.js",
     "stdlib:pack": "node scripts/pack-stdlib-to-object.js",
     "wasm:dist": "cp src/tolkfiftlib.js dist && cp src/tolkfiftlib.wasm.js dist",
     "stdlib:dist": "cp -r src/tolk-stdlib dist && cp src/stdlib.tolk.js dist",
-    "test": "yarn wasm:pack && yarn stdlib:pack && yarn jest"
+    "test": "npm run wasm:pack && npm run stdlib:pack && jest"
   },
   "author": "TON Blockchain",
   "license": "MIT",

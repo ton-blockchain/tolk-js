@@ -1,31 +1,44 @@
+name: Build, Test and Publish npm
+
 on:
   push:
     branches:
       - master
-name: Build, Test and Publish npm
+    paths:
+      - 'package.json'
+
+permissions: { }
+
 jobs:
   publish:
     name: Publish npm
     runs-on: ubuntu-latest
+    environment: deploy
 
     permissions:
       contents: read
       id-token: write
 
     steps:
-      - uses: actions/checkout@v6
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v6
+      - name: Fetch Sources
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
-      - name: Install Yarn
-        run: npm install -g yarn
+
       - name: Install dependencies
-        run: yarn
+        run: npm ci
+
       - name: Build
-        run: yarn build
+        run: npm run build
+
       - name: Test
-        run: yarn test
+        run: npm run test
+
       - name: Publish
         run: npm publish --access public
