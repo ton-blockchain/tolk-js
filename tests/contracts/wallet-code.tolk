@@ -4,6 +4,9 @@ import "@stdlib/tvm-lowlevel"
 import "../imports/wallet-helpers"
 import "../imports/./wallet-storage.tolk"
 
+contract WalletT {
+}
+
 fun onInternalMessage(inMsg: slice) {
   // do nothing for internal messages
 }
@@ -18,7 +21,7 @@ fun onExternalMessage(inMsg: slice) {
   assert(isSignatureValid(inMsg.hash(), signature, st.publicKey)) throw 34;
   acceptExternalMessage();
   cs.stackMoveToTop();
-  while (cs.remainingRefsCount()) {
+  while (cs.remainingRefsCount() != 0) {
     var mode = cs.loadUint(8);
     sendRawMessage(cs.loadRef(), mode)
   }
