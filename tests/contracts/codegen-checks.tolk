@@ -13,6 +13,11 @@ fun check3() {
     return ("".literalSlice() as address).toCell()
 }
 
+@method_id(104)
+fun check4() {
+    return grams("0.05");
+}
+
 fun main() {
     
 }
