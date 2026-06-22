@@ -25,6 +25,11 @@ const EXPECT_TO_CONTAIN = [
     ENDC
   }>
 `,
+`
+  check4() PROC:<{
+    50000000 PUSHINT
+  }>
+`,
 ]
 
 const EXPECT_NOT_TO_CONTAIN = [

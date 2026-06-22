@@ -129,4 +129,14 @@ describe('tolk-js', () => {
     expect(result.status).toEqual('error')
     expect(result.message).toContain('path mapping @asdf was not registered')
   })
+
+  it('should contain abiJson', async () => {
+    let result = await runTolkCompiler({
+      entrypointFileName: "wallet-code.tolk",
+      fsReadCallback: path => fs.readFileSync(`./tests/contracts/${path}`, 'utf-8')
+    }) as TolkResultSuccess
+
+    expect(result.abiJson['compiler_version']).toEqual('1.4.2')
+    expect(result.abiJson['thrown_errors']).toContainEqual({"err_code": 34, "kind": "plain_int"})
+  })
 })

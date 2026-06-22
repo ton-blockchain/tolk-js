@@ -29,6 +29,7 @@ export type TolkResultSuccess = {
   codeHashHex: string
   tolkVersion: string
   stderr: string
+  abiJson: Record<string, any>              // ABI of a contract (pass it to TypeScript wrappers generator)
   sourcesSnapshot: { filename: string, contents: string }[]
 }
 
