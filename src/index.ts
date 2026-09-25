@@ -15,10 +15,10 @@ export type FsReadCallback = (path: string) => string
 export type TolkCompilerConfig = {
   entrypointFileName: string
   fsReadCallback: FsReadCallback
-  optimizationLevel?: number
   withStackComments?: boolean
   withSrcLineComments?: boolean
-  experimentalOptions?: string              // deprecated, not used anymore, to be deleted
+  withDebugMarks?: boolean
+  colorizeErrors?: boolean
   pathMappings?: Record<string, string>     // { "@third_party": "/absolute/folder", ... }
 }
 
@@ -29,7 +29,10 @@ export type TolkResultSuccess = {
   codeHashHex: string
   tolkVersion: string
   stderr: string
-  abiJson: Record<string, any>              // ABI of a contract (pass it to TypeScript wrappers generator)
+  abiJson: Record<string, any>            // ABI of a contract (pass it to TypeScript wrappers generator)
+  symbolTypesJson: Record<string, any>    // files, functions, and other symbols; present by default
+  debugMarksJson: any[] | null            // present if `withDebugMarks`
+  debugMarksBase64: string                // present if `withDebugMarks`
   sourcesSnapshot: { filename: string, contents: string }[]
 }
 
@@ -135,9 +138,10 @@ export async function runTolkCompiler(compilerConfig: TolkCompilerConfig): Promi
 
   const configStr = JSON.stringify({  // undefined fields won't be present, defaults will be used, see tolk-wasm.cpp
     entrypointFileName: compilerConfig.entrypointFileName,
-    optimizationLevel: compilerConfig.optimizationLevel,
     withStackComments: compilerConfig.withStackComments,
     withSrcLineComments: compilerConfig.withSrcLineComments,
+    withDebugMarks: compilerConfig.withDebugMarks,
+    colorizeErrors: compilerConfig.colorizeErrors,
   })
 
   const configStrPtr = copyToCStringAllocating(mod, configStr)
