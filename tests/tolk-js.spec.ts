@@ -31,10 +31,11 @@ describe('tolk-js', () => {
     let result = await runTolkCompiler({
       entrypointFileName: "main.tolk",
       fsReadCallback: _ => source,
-    }) as TolkResultSuccess
+    }) as TolkResultError
 
-    expect(result.status).toEqual('ok')
-    expect(result.stderr).toContain(`the contract is written in Tolk v0.1, but you use Tolk compiler v${tolkVersion}`)
+    expect(result.status).toEqual('error')
+    expect(result.message.startsWith('error:')).toBeTruthy();
+    expect(result.message).toContain(`the contract is written in Tolk v0.1, but you use Tolk compiler v${tolkVersion}`)
   })
 
   it('should fail if fsReadCallback throws', async () => {
@@ -136,7 +137,43 @@ describe('tolk-js', () => {
       fsReadCallback: path => fs.readFileSync(`./tests/contracts/${path}`, 'utf-8')
     }) as TolkResultSuccess
 
-    expect(result.abiJson['compiler_version']).toEqual('1.4.2')
+    expect(result.abiJson['compiler_version']).toEqual('1.5.0')
     expect(result.abiJson['thrown_errors']).toContainEqual({"err_code": 34, "kind": "plain_int"})
+  })
+
+  it('should not contain debug marks by default', async () => {
+    let result = await runTolkCompiler({
+      entrypointFileName: "id-and-main.tolk",
+      fsReadCallback: path => fs.readFileSync(`./tests/contracts/${path}`, 'utf-8')
+    }) as TolkResultSuccess
+
+    expect(result.status).toEqual('ok')
+    expect(result.symbolTypesJson.files.length).toBe(2)
+    expect(result.symbolTypesJson.functions.map((f:any) => f.name)).toEqual(['main', 'id<int>'])
+    expect(result.debugMarksJson).toBeNull()
+    expect(result.debugMarksBase64).toHaveLength(0)
+  })
+
+  it('should contain debug marks if an option passed', async () => {
+    let result = await runTolkCompiler({
+      entrypointFileName: "id-and-main.tolk",
+      withDebugMarks: true,
+      fsReadCallback: path => fs.readFileSync(`./tests/contracts/${path}`, 'utf-8')
+    }) as TolkResultSuccess
+
+    expect(result.debugMarksJson!.length).toBe(13)
+    expect(result.debugMarksJson![0].kind).toBe('enter_fun')
+    expect(result.debugMarksBase64.startsWith('te6ccg')).toBeTruthy()
+  })
+
+  it('should colorize errors if an option passed', async () => {
+    let result = await runTolkCompiler({
+      entrypointFileName: "main.tolk",
+      colorizeErrors: true,
+      fsReadCallback: _ => 'fun main(x) {}'
+    }) as TolkResultError
+
+    expect(result.message.startsWith('error:')).toBeFalsy();
+    expect(result.message.startsWith("\x1b[1;31merror\x1b[0m\x1b[1m: \x1b[0m")).toBeTruthy();
   })
 })
